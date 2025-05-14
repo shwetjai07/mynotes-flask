@@ -14,47 +14,49 @@
     <title>{% block title %}Home{% endblock %}</title>
 
     <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .navbar {
-            margin-bottom: 20px;
-        }
-
-        .nav-link.active {
-            font-weight: bold;
-            color: #007bff !important;
-        }
-
-        .nav-link {
+        
+        .nav-link:hover {
             text-decoration: none;
-            color: white;
-            font-size: 20px;
+            color: #1066bd !important;
+            border : 1px solid #1066bd;
+            border-radius: 5px;
         }
     </style>
 
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
-        <botton class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm px-7" >
+    <div class="container-fluid">
+
+        <!-- Web App Name -->
+        <a class="navbar-brand fw-bold text-warning" href="/">MyNotes</a>
+
+        <!-- Toggler for mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-        </botton>
-        <div class="collapse navbar-collapse" id="navbarNav">
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <div class="navbar-nav">
                 {% if user.is_authenticated %}
-                <a class="nav-item nav-link active" id="home" href="/">Home</a>
-                <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+                <a class="nav-link text-white" href="/">Home</a>
+                <a class="nav-link text-white" href="/logout">Logout</a>
+                <button class="nav-link btn btn-link text-white" data-bs-toggle="modal"
+                    data-bs-target="#contactModal" onclick="sendToContact()">Contact Us</button>
                 {% else %}
-                <a class="nav-item nav-link" id="login" href="/login">Login</a>
-                <a class="nav-item nav-link" id="signUp" href="/signup">Sign Up</a>
+                <a class="nav-link text-white" href="/login">Login</a>
+                <a class="nav-link text-white" href="/signup">Sign Up</a>
+                <button class="nav-link btn btn-link text-white" data-bs-toggle="modal"
+                    data-bs-target="#contactModal" onclick="sendToContact()">Contact Us</button>
                 {% endif %}
-
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
+
 
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -86,16 +88,43 @@
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
-        crossorigin="anonymous"></script>
+    <footer class="bg-light text-center text-lg-start mt-4">
+        <div>
+            <div class="text-center p-3">
+                © 2025 MyNotes is a simple note-taking application built with Flask and Bootstrap.
+                <br>
+            </div>
+            <div class="text-center p-3">
+                The website source code OpenSource and is available on Github.
+                <br>
+            </div>
+        </div>
+        <div>
+            <div class="text-center p-3">
+                {% if user.is_authenticated %}
+                <a class="" id="home" href="/">Home</a>
+                <a class="" id="logout" href="/logout">Logout</a>
+                <a class="" id="contactUs" href="/contact-us">Contact Us</a>
+                {% else %}
+                <a class="" id="login" href="/login">Login</a>
+                <a class="" id="signUp" href="/signup">Sign Up</a>
+                <a class="" id="contactUs" href="/contact-us">Contact Us</a>
+                {% endif %}
+            </div>
+        </div>
 
-    <script>
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-        const tooltipList = [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el));
-    </script>
 
-    <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+            crossorigin="anonymous"></script>
+
+        <script>
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el));
+        </script>
+
+        <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
 </body>
 
 </html>

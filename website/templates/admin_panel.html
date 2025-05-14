@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel{% endblock %}
+
+{% block contents %}
+<div class="container mt-4">
+    <h3 class="text-primary">User Suggestions</h3>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in suggestions %}
+            <tr>
+                <td>{{ s.user_id }}</td>
+                <td>{{ s.suggestion }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

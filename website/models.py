@@ -14,11 +14,17 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     username = db.Column(db.String(150), unique=True)
-    # date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
+    is_admin = db.Column(db.Boolean, default=False)
     notes = db.relationship('Note')
+    Suggestions = db.relationship('Suggestions', backref='user_obj')  # One user, many suggestions
 
 class Tags(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tag = db.Column(db.String(150), default="General")
     notes = db.relationship('Note', backref='tag_obj')  # One tag, many notes
-    
+
+class Suggestions(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    suggestion = db.Column(db.String(1500))
+    date = db.Column(db.DateTime(timezone=True), default=func.now())
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

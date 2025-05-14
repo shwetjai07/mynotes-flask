@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from .models import Note, Tags
+from .models import Note, Tags, Suggestions
 from . import db
 import json
 from flask import make_response
@@ -42,6 +42,32 @@ def home():
             return redirect(url_for('views.home'))
         
     return render_template('home.html', user=current_user, notes=current_user.notes)
+
+@views.route('/contact-us', methods=['GET', 'POST'])
+def contact_us():
+    if request.method == 'GET':
+        if current_user.is_authenticated:
+            return render_template('contact_us.html', user=current_user)
+        else:
+            render_template('contact_us.html', user=None)
+    if request.method == 'POST':
+        if current_user.is_authenticated:
+            message = request.form.get('message')
+            user_id = request.form.get('user_id')
+            if len(message) < 10:
+                flash('Information too short, kindly add something more...', category='error')
+            else:
+                # Here you would typically send the message to your email or store it in a database
+                new_suggestion = Suggestions(suggestion=message, user_id=user_id)
+                db.session.add(new_suggestion)
+                db.session.commit()
+                flash('Message sent!', category='success')
+                return redirect(url_for('views.contact_us'))
+        else:
+            flash('Please log in to send a message.', category='error')
+            return redirect(url_for('views.login'))
+
+    return render_template('contact_us.html', user=current_user)
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():
@@ -89,6 +115,7 @@ def edit_note():
     if request.method == 'POST':
         new_note = request.form.get('note')
         note_id = request.form.get('note_id')
+        tag = request.form.get('tag')
 
         if len(new_note) < 1:
             flash('Note is too short!', category='error')
@@ -97,6 +124,13 @@ def edit_note():
         note = Note.query.get(note_id)
         if note and note.user_id == current_user.id:
             note.data = new_note
+            existing_tag = Tags.query.filter_by(tag=tag).first()
+            if not existing_tag:
+                existing_tag = Tags(tag=tag)
+                db.session.add(existing_tag)
+                db.session.commit()
+            
+            note.tag_id = existing_tag.id
             db.session.commit()
             flash('Note updated!', category='success')
         else:
@@ -104,3 +138,12 @@ def edit_note():
 
         return redirect(url_for('views.home'))
 
+@views.route('/admin-panel')
+@login_required
+def admin_panel():
+    if not current_user.is_admin:
+        flash("You are not authorized to view this page.", category="error")
+        return redirect(url_for('views.home'))
+
+    all_suggestions = Suggestions.query.all()
+    return render_template("admin_panel.html", suggestions=all_suggestions, user=current_user)

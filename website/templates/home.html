@@ -81,6 +81,16 @@
                                 rows="4">{{ edit_note.data }}</textarea>
                             <input type="hidden" name="note_id" value="{{ edit_note.id }}">
                         </div>
+                        <div class="mb-3">
+                            <label for="tag" class="form-label">Tag:</label>
+                            <select class="form-select" name="tag" id="tag">
+                                <option value="{{ edit_note.tag_obj.tag }}">{{ edit_note.tag_obj.tag }}</option>
+                                <option value="General">General</option>
+                                <option value="work">Work</option>
+                                <option value="personal">Personal</option>
+                                <option value="urgent">Urgent</option>
+                            </select>
+                        </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">Update Note</button>
                         </div>

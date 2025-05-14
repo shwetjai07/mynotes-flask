@@ -13,14 +13,12 @@ function editNote(noteId) {
 
 }
 
-// function editNote(noteId){
-//     const newNote = prompt("Enter the new note:");
-//     if (newNote) {
-//         fetch("/edit-note", {
-//             method: "POST",
-//             body: JSON.stringify({ noteId: noteId, newNote: newNote }),
-//         }).then((_res) => {
-//             window.location.href = "/";
-//         });
-//     }
-// }
+function sendToContact(){
+
+    window.location.href = `/contact-us`;
+}
+
+function sendToAdmin(){
+
+    window.location.href = `/admin-panel`;
+}
